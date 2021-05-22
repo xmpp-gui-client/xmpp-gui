@@ -1,7 +1,7 @@
 # xmpp-gui
 
 ## what is this?
-This is a XMPP GUI client proejct for `CS510/410: Rust Programming`.
+This is a XMPP GUI client proejct for `CS510/410: Rust Programming`. It uses [xmpp-library](https://gitlab.com/xmpp-rs/xmpp-rs.git) to build a GUI client.
 
 
 ## Requirements:
