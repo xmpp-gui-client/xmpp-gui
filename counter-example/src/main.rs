@@ -1,4 +1,4 @@
-use iced::{button, Align, Button, Column, Element, Sandbox,Settings,Text};
+use iced::{button, Align, Button, Row, Element, Sandbox,Settings,Text,Color};
 fn main() -> iced::Result{
     MyCounter::run(Settings::default())
     // println!("Hello, world!");
@@ -18,7 +18,11 @@ enum Message{
     Increment,
     Decrement,
 }
-
+impl MyCounter{
+    fn ToText(text: &str)-> Text{
+        Text::new(text.to_string())
+    }
+}
 // implement the sanbox trait for MyCounter
 impl Sandbox for MyCounter{
     type Message = Message; // type
@@ -38,20 +42,26 @@ impl Sandbox for MyCounter{
         };
     }
     
+    
+    
     // return element of type Message
     fn view(&mut self) -> Element<Message>{
-        Column::new()
+        Row::new()
         .padding(40)
         .align_items(Align::Center)
         .push(
-            Button::new(&mut self.increment_button,Text::new("Increment"))
-            .on_press(Message::Increment),
+            Self::ToText("something")
         )
-        .push(Text::new(self.value.to_string()).size(50))
         .push(
-            Button::new(&mut self.decrement_button,Text::new("Decrement"))
-            .on_press(Message::Decrement),
+            Text::new("something".to_string())
+        )
+        .push(
+            Text::new("something".to_string())
         )
         .into()
     }
+
+    // fn background_color(&self) -> Color {
+    //     Color::TRANSPARENT
+    // }
 } // sandbox trait
