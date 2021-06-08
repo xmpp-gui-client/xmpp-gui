@@ -2,6 +2,8 @@
 use iced::{button, Sandbox,Button, Color, Element, Row,Column, Text,TextInput,text_input,Settings};
 use xmpp::{ClientBuilder, ClientFeature, ClientType, Event};
 // use xmpp_parsers::{message::MessageType, Jid};
+mod client;
+use client::State;
 
 
 fn main() -> iced::Result {
@@ -11,15 +13,16 @@ fn main() -> iced::Result {
 
 /// first component required by Iced (state)
 #[derive(Default)]
-pub struct App<'a> {
-    connection_status: &'a str,
+pub struct App {
+    // connection_status: &'a str,
     connect_button: button::State, // used to indicate connection to server
     disconnect_button: button::State, // used to indicate disconnection from server
 
     jid_input: text_input::State,
     passwd_input: text_input::State,
-    passwd: String,
-    jid: String,
+    // passwd: String,
+    // jid: String,
+    state: State,
 }
 
 
@@ -32,36 +35,36 @@ pub enum GuiEvent {
     PasswdChanged(String),
 }
 
-impl App<'_> {
-    fn status_color(status: &str) -> Color {
-        let max = 255.0;
-        match status {
-            "connected" => Color {
-                r: 0.,
-                g: max,
-                b: 0.,
-                a: max,
-            },
-            _ => Color {
-                r: max,
-                g: 0.,
-                b: 0.,
-                a: max,
-            },
-        }
-    }
-    fn valid_jid(jid:&str) -> bool {
-        if jid.contains("@"){
-            let v:Vec<&str> = jid.split("@").collect();
-            if v.len() > 1{
-                return true;
-            }
-        }
-        false
-    }
-}
+// impl App<'_> {
+//     // fn status_color(status: &str) -> Color {
+//     //     let max = 255.0;
+//     //     match status {
+//     //         "connected" => Color {
+//     //             r: 0.,
+//     //             g: max,
+//     //             b: 0.,
+//     //             a: max,
+//     //         },
+//     //         _ => Color {
+//     //             r: max,
+//     //             g: 0.,
+//     //             b: 0.,
+//     //             a: max,
+//     //         },
+//     //     }
+//     // }
+//     fn valid_jid(jid:&str) -> bool {
+//         if jid.contains("@"){
+//             let v:Vec<&str> = jid.split("@").collect();
+//             if v.len() > 1{
+//                 return true;
+//             }
+//         }
+//         false
+//     }
+// }
 
-impl Sandbox for App<'_> {
+impl Sandbox for App {
     // type Executor = executor::Default;
     // type Flags = ();
     type Message = GuiEvent;
@@ -78,10 +81,10 @@ impl Sandbox for App<'_> {
             .push(
                 Row::new()
                 .push(
-                    TextInput::new(&mut self.jid_input,"JID",&self.jid,GuiEvent::JidChanged).padding(10),
+                    TextInput::new(&mut self.jid_input,"JID",&self.state.jid,GuiEvent::JidChanged).padding(10),
                 )
                 .push(
-                    TextInput::new(&mut self.passwd_input,"Password",&self.passwd,GuiEvent::PasswdChanged).padding(10),
+                    TextInput::new(&mut self.passwd_input,"Password",&self.state.passwd,GuiEvent::PasswdChanged).padding(10),
                 )
                 .max_width(500)
             )
@@ -97,9 +100,9 @@ impl Sandbox for App<'_> {
                 )
                 .push(
                     // display connection status
-                    Text::new(&self.connection_status.to_string())
+                    Text::new(&self.state.status)
                     .size(30)
-                    .color(Self::status_color(self.connection_status))
+                    .color(self.state.color())
                 )
                 .spacing(10)
             )
@@ -110,20 +113,21 @@ impl Sandbox for App<'_> {
     fn update(&mut self, message: GuiEvent){
         match message {
             GuiEvent::Connect => {
-                let jid = &self.jid;
-                let passwd = &self.passwd;
-                if !Self::valid_jid(jid) {
-                    self.connection_status = "Invalid JID";
-                }
+                // let jid = &self.state.jid;
+                // let passwd = &self.state.passwd;
+                // if self.state.valid_jid() {
+                //     self.state.status = "Invalid JID".to_string();
+                // }
+                self.state.connect();
             },
             GuiEvent::Disconnect => {
-                self.connection_status = "Disconnected";
+                self.state.status = "Disconnected".to_string();
             },
             GuiEvent::JidChanged(s) => {
-                self.jid = s;
+                self.state.jid = s.to_string();
             },
             GuiEvent::PasswdChanged(s) => {
-                self.passwd = s;
+                self.state.passwd = s.to_string();
             },
         }
     }
