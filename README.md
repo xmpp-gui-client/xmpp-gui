@@ -20,3 +20,10 @@ Openssl: https://users.rust-lang.org/t/cargo-dependency-issue-with-openssl/42130
 * crates depend on openssl v0.9.24:
     * native-tls v0.2.7
     * sasl v0.3.0
+
+
+XMPP server used: `prosody`
+	* a Jabber/XMPP server written in Lua
+	* used to avoid writing xmpp server
+	* requires:
+		* `lua-sec`: a TLS/SSL communication library for Lua
