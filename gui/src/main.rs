@@ -1,21 +1,25 @@
-// things components used from the iced crate
+
+//! # Mohammed Alsaid
+//! This is a simple GUI client the uses `xmpp` crate to build an XMPP client. 
+
 use iced::{
     button, text_input, Button, Checkbox, Column, Element, Row, Sandbox, Settings, Text, TextInput,
 };
-// use xmpp_parsers::{message::MessageType, Jid};
-// use xmpp::ClientFeature;
+
+/// Clinet module that handles the state of the XMPP client. It performs XMPP functionalities on behalf of the user using `xmpp` create.
 mod client;
 use client::State;
 
+/// Runs the GUI application with the default settings of iced.
 fn main() -> iced::Result {
     App::run(Settings::default())
 }
 
-/// first component required by Iced (state)
+/// Holds the GUI state of the client.
 #[derive(Default)]
 pub struct App {
-    // connection_status: &'a str,
-    connect_button: button::State, // used to indicate connection to server
+    /// something
+    connect_button: button::State, 
     disconnect_button: button::State, // used to indicate disconnection from server
     join_room_button: button::State,
 
@@ -29,7 +33,7 @@ pub struct App {
     state: State,
 }
 
-/// second component required by Iced (interactions)
+/// used to describe the interactions/events that arise between the components.
 #[derive(Debug, Clone)]
 pub enum GuiEvent {
     Connect,
@@ -44,8 +48,6 @@ pub enum GuiEvent {
 }
 
 impl Sandbox for App {
-    // type Executor = executor::Default;
-    // type Flags = ();
     type Message = GuiEvent;
     fn new() -> Self {
         Self::default()
@@ -54,9 +56,9 @@ impl Sandbox for App {
     fn title(&self) -> String {
         "XMPP Client".to_string()
     }
-    /// third component needed (view)
+    
     fn view(&mut self) -> Element<GuiEvent> {
-        Column::new() // first row
+        Column::new() 
             .push(
                 Row::new()
                     .push(
@@ -83,14 +85,13 @@ impl Sandbox for App {
                 Row::new()
                     .push(
                         Button::new(&mut self.connect_button, Text::new("Connect"))
-                            .on_press(GuiEvent::Connect), // send connect event when clicked
+                            .on_press(GuiEvent::Connect), 
                     )
                     .push(
                         Button::new(&mut self.disconnect_button, Text::new("Disconned"))
-                            .on_press(GuiEvent::Disconnect), // send disconnect event
+                            .on_press(GuiEvent::Disconnect),
                     )
                     .push(
-                        // display connection status
                         Text::new(&self.state.status)
                             .size(30)
                             .color(self.state.color()),
@@ -159,7 +160,6 @@ impl Sandbox for App {
             .into()
     }
 
-    /// fourth component needed (reaction to interactions -- udpate state)
     fn update(&mut self, message: GuiEvent) {
         match message {
             GuiEvent::Connect => {

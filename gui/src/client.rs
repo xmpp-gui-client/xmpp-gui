@@ -1,7 +1,12 @@
+//! # Mohammed Alsaid C 
+/// 
+
 use iced::Color;
 use xmpp::{ClientBuilder, ClientFeature, ClientType, Event};
-// use ;
 
+
+
+/// holds the state of the XMPP client
 #[derive(Default)]
 pub struct State {
     pub jid: String,
@@ -14,9 +19,7 @@ pub struct State {
 }
 
 impl State {
-    // fn new() -> Self{
-    //     Self::default()
-    // }
+    /// returns the color according to the current state of the client.
     pub fn color(&self) -> Color {
         let max = 255.0;
         match &self.status.to_lowercase()[..] {
@@ -36,7 +39,7 @@ impl State {
         }
     }
 
-    /// validates the states jid
+    /// validates the client's JID.
     fn valid_jid(&self) -> bool {
         if self.jid.contains('@') {
             let v: Vec<&str> = self.jid.split('@').collect();
@@ -47,6 +50,7 @@ impl State {
         false
     }
 
+    /// helper function that builds an XMPP client and attempts to wait for an online event.
     #[tokio::main]
     async fn conn(&mut self) {
         let mut client_builder =
@@ -69,6 +73,8 @@ impl State {
             }
         }
     }
+
+    /// attempts to connect to the XMPP server using the current state (JID, domain and password)
     pub fn connect(&mut self) {
         if !self.valid_jid() {
             self.status = "Invalid JID".to_string();
@@ -77,7 +83,7 @@ impl State {
         self.conn();
     }
 
-    // #[tokio::main]
+    /// helper function that builds an XMPP client and attempts to join a room.
     fn join(&mut self) {
         let mut client_builder =
             ClientBuilder::new(&self.jid, &self.passwd).set_client(ClientType::Pc, "xmpp-rs");
@@ -86,6 +92,8 @@ impl State {
         }
         self.room_status = "failed to connect".to_string();
     }
+    
+    /// attempts to JoinRoom using the current state.
     pub fn join_room(&mut self) {
         if !self.valid_jid() || self.status.to_lowercase() != "connected" {
             self.room_status = "Not joined".to_string();
@@ -97,36 +105,47 @@ impl State {
         }
         self.join();
     }
+
+    /// setter for JID.
     pub fn set_jid(&mut self, jid: &str) {
         self.jid = jid.to_string();
     }
 
+    /// setter for password.
     pub fn set_passwd(&mut self, pass: &str) {
         self.passwd = pass.to_string();
     }
+
+    /// setter for status.
     pub fn set_status(&mut self, status: &str) {
         self.status = status.to_string();
     }
+    /// setter for room name.
+    pub fn set_room(&mut self, name: &str) {
+        self.room = name.to_string();
+    }
 
+    /// adds the passed feature to the Vec of enabled features.
     fn add_feature(&mut self, feature: &str) {
         let exists = self.feature_exist(feature);
         if !exists {
             self.features.push(feature.to_lowercase());
         }
     }
+    
+    /// removes the passed feature from the Vec of enabled features.
     fn remove_feature(&mut self, feature: &str) {
         let f = &feature.to_lowercase()[..];
         self.features.retain(|x| x != f);
     }
+
+    /// checks if the passed feature is currently enabled for the client. Returns true if is and false otherwise.
     pub fn feature_exist(&self, feature: &str) -> bool {
         let feature = &feature.to_lowercase()[..];
         self.features.iter().any(|f| f == feature)
     }
 
-    pub fn set_room(&mut self, name: &str) {
-        self.room = name.to_string();
-    }
-
+    /// helper function that maps features to ClientFeature type. Used to convert enable features before building the client.
     fn get_feature(&self, f: &str) -> ClientFeature {
         match &f.to_lowercase()[..] {
             "joinrooms" => ClientFeature::JoinRooms,
@@ -135,6 +154,7 @@ impl State {
         }
     }
 
+    /// checks if the passed feature is currently enabled for the client. If the feature is enabled, it disables it for the client. Otherwise, it enables it.
     pub fn feature_toggle(&mut self, feature: &str) -> bool {
         if self.feature_exist(feature) {
             self.remove_feature(feature);
