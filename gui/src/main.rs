@@ -1,7 +1,7 @@
 // things components used from the iced crate
-use iced::{button, Sandbox,Button, Color, Element, Row,Column, Text,TextInput,text_input,Settings};
-use xmpp::{ClientBuilder, ClientFeature, ClientType, Event};
+use iced::{button, Sandbox,Button, Element, Row,Column, Text,TextInput,text_input,Checkbox,Settings};
 // use xmpp_parsers::{message::MessageType, Jid};
+// use xmpp::ClientFeature;
 mod client;
 use client::State;
 
@@ -20,8 +20,10 @@ pub struct App {
 
     jid_input: text_input::State,
     passwd_input: text_input::State,
-    // passwd: String,
-    // jid: String,
+    
+    avatars_feature: bool,
+    join_room_feature:bool,
+    contact_list_feature: bool,
     state: State,
 }
 
@@ -33,36 +35,11 @@ pub enum GuiEvent {
     Disconnect,
     JidChanged(String),
     PasswdChanged(String),
+    ToggleAvatar(bool),
+    ToggleJoinRoom(bool),
+    ToggleContactList(bool),
 }
 
-// impl App<'_> {
-//     // fn status_color(status: &str) -> Color {
-//     //     let max = 255.0;
-//     //     match status {
-//     //         "connected" => Color {
-//     //             r: 0.,
-//     //             g: max,
-//     //             b: 0.,
-//     //             a: max,
-//     //         },
-//     //         _ => Color {
-//     //             r: max,
-//     //             g: 0.,
-//     //             b: 0.,
-//     //             a: max,
-//     //         },
-//     //     }
-//     // }
-//     fn valid_jid(jid:&str) -> bool {
-//         if jid.contains("@"){
-//             let v:Vec<&str> = jid.split("@").collect();
-//             if v.len() > 1{
-//                 return true;
-//             }
-//         }
-//         false
-//     }
-// }
 
 impl Sandbox for App {
     // type Executor = executor::Default;
@@ -106,6 +83,30 @@ impl Sandbox for App {
                 )
                 .spacing(10)
             )
+            .push(
+                Text::new("Features:").size(30)
+            )
+            .push(
+                Checkbox::new(
+                    self.join_room_feature,
+                    "JoinRoom".to_owned(),
+                    GuiEvent::ToggleJoinRoom,
+                ).size(30)
+            )
+            .push(
+                Checkbox::new(
+                    self.avatars_feature,
+                    "Avatars".to_owned(),
+                    GuiEvent::ToggleAvatar,
+                ).size(30)
+            )
+            .push(
+                Checkbox::new(
+                    self.contact_list_feature,
+                    "ContactList".to_owned(),
+                    GuiEvent::ToggleContactList,
+                ).size(30)
+            )
             .into()
     }
 
@@ -124,11 +125,21 @@ impl Sandbox for App {
                 self.state.status = "Disconnected".to_string();
             },
             GuiEvent::JidChanged(s) => {
-                self.state.jid = s.to_string();
+                self.state.set_jid(&s);
             },
             GuiEvent::PasswdChanged(s) => {
-                self.state.passwd = s.to_string();
+                self.state.set_passwd(&s);
             },
+            GuiEvent::ToggleContactList(_) =>{
+                self.contact_list_feature = self.state.feature_toggle("ContactList");
+            },
+            GuiEvent::ToggleAvatar(_) =>{
+                self.avatars_feature = self.state.feature_toggle("avatars");
+            },
+            GuiEvent::ToggleJoinRoom(_) =>{
+                self.join_room_feature = self.state.feature_toggle("joinRooms");
+            }  
+
         }
     }
 }
