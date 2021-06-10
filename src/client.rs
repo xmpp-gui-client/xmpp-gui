@@ -1,6 +1,19 @@
-//! # Mohammed Alsaid C 
-/// 
-
+//! # State
+//! 
+//! provides an `xmpp` interface suitable for a GUI application to manipulate the state. 
+//! 
+//! Based on the state, this client intiates `xmpp` requests to the server
+//! 
+//! # Example
+//! 
+//! The user can change the `JID` and `Password` through the provided setters. 
+//! Also, the `connect` function uses the current state as paramaters to initiate the calls.
+//! 
+//! # Features
+//! 
+//! The `xmpp` client builder provides features. To use that in a GUI application, the `toggle_feature` method can be used as the logic for a checkbo.
+//! When called it removes or adds the feature from the state before building the next client.     
+//! 
 use iced::Color;
 use xmpp::{ClientBuilder, ClientFeature, ClientType, Event};
 

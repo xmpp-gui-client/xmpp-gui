@@ -1189,17 +1189,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "gui"
-version = "0.1.0"
-dependencies = [
- "futures",
- "iced",
- "jid",
- "tokio",
- "xmpp",
-]
-
-[[package]]
 name = "guillotiere"
 version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3532,6 +3521,17 @@ dependencies = [
  "tokio",
  "tokio-xmpp",
  "xmpp-parsers",
+]
+
+[[package]]
+name = "xmpp-gui"
+version = "0.1.0"
+dependencies = [
+ "futures",
+ "iced",
+ "jid",
+ "tokio",
+ "xmpp",
 ]
 
 [[package]]

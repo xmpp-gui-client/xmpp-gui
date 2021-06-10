@@ -1,6 +1,27 @@
+//! XMPP GUI Client: provides a simple GUI interface for `xmpp` create to enable the user to interact with an XMPP server.
+//! 
+//! ## State
+//! 
+//! XMPP client can use the state to initiate/track events to/from the server. 
+//! It augments `xmpp` library to fit the needs of this gui client. 
+//! 
+//! ## App:
+//! 
+//! An `iced` application needs a state to provide an MVC model. 
+//! This application uses `App` struct as the model. The `App` struct
+//! also contains `client::State` that aids in the control of of xmpp state.
+//! 
+//! ## GuiEvent
+//! 
+//! GuiEvent is used to signal events, which is used to change the user's view. 
+//! 
+//! ## Sandbox
+//! 
+//! This client runs as a `Sandbox`ed iced application. It means that it cannot perform any asynchronous.
+//! This is might not be the best choice for a network application.
 
-//! # Mohammed Alsaid
-//! This is a simple GUI client the uses `xmpp` crate to build an XMPP client. 
+
+// Mohammed Alsaid 2021
 
 use iced::{
     button, text_input, Button, Checkbox, Column, Element, Row, Sandbox, Settings, Text, TextInput,
@@ -18,9 +39,11 @@ fn main() -> iced::Result {
 /// Holds the GUI state of the client.
 #[derive(Default)]
 pub struct App {
-    /// something
+    /// used to handle the `Conenct` button
     connect_button: button::State, 
+    /// used to handle the `Disconenct` button
     disconnect_button: button::State, // used to indicate disconnection from server
+    /// used to handle the `Join Room` button
     join_room_button: button::State,
 
     jid_input: text_input::State,
@@ -30,20 +53,30 @@ pub struct App {
     avatars_feature: bool,
     join_room_feature: bool,
     contact_list_feature: bool,
+    /// used to handle the xmpp client
     state: State,
 }
 
 /// used to describe the interactions/events that arise between the components.
 #[derive(Debug, Clone)]
 pub enum GuiEvent {
+    /// `Connect` button was invoked
     Connect,
+    /// `Disonnect` button was invoked
     Disconnect,
+    /// `JoinRoom` button was invoked
     JoinRoom,
+    /// `JID` filed has changed
     JidChanged(String),
+    /// `Password` filed has changed
     PasswdChanged(String),
+    /// `Avatar` feature was check/unchecked
     ToggleAvatar(bool),
+    /// `JoinRoom` feature was check/unchecked
     ToggleJoinRoom(bool),
+    /// `ContactList` feature was check/unchecked
     ToggleContactList(bool),
+    /// `RoomName` field has changed
     RoomNameChanged(String),
 }
 
