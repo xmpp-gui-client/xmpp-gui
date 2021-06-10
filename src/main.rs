@@ -1,25 +1,24 @@
 //! XMPP GUI Client: provides a simple GUI interface for `xmpp` create to enable the user to interact with an XMPP server.
-//! 
+//!
 //! ## State
-//! 
-//! XMPP client can use the state to initiate/track events to/from the server. 
-//! It augments `xmpp` library to fit the needs of this gui client. 
-//! 
+//!
+//! XMPP client can use the state to initiate/track events to/from the server.
+//! It augments `xmpp` library to fit the needs of this gui client.
+//!
 //! ## App:
-//! 
-//! An `iced` application needs a state to provide an MVC model. 
+//!
+//! An `iced` application needs a state to provide an MVC model.
 //! This application uses `App` struct as the model. The `App` struct
 //! also contains `client::State` that aids in the control of of xmpp state.
-//! 
+//!
 //! ## GuiEvent
-//! 
-//! GuiEvent is used to signal events, which is used to change the user's view. 
-//! 
+//!
+//! GuiEvent is used to signal events, which is used to change the user's view.
+//!
 //! ## Sandbox
-//! 
+//!
 //! This client runs as a `Sandbox`ed iced application. It means that it cannot perform any asynchronous.
 //! This is might not be the best choice for a network application.
-
 
 // Mohammed Alsaid 2021
 
@@ -40,7 +39,7 @@ fn main() -> iced::Result {
 #[derive(Default)]
 pub struct App {
     /// used to handle the `Conenct` button
-    connect_button: button::State, 
+    connect_button: button::State,
     /// used to handle the `Disconenct` button
     disconnect_button: button::State, // used to indicate disconnection from server
     /// used to handle the `Join Room` button
@@ -89,9 +88,9 @@ impl Sandbox for App {
     fn title(&self) -> String {
         "XMPP Client".to_string()
     }
-    
+
     fn view(&mut self) -> Element<GuiEvent> {
-        Column::new() 
+        Column::new()
             .push(
                 Row::new()
                     .push(
@@ -118,7 +117,7 @@ impl Sandbox for App {
                 Row::new()
                     .push(
                         Button::new(&mut self.connect_button, Text::new("Connect"))
-                            .on_press(GuiEvent::Connect), 
+                            .on_press(GuiEvent::Connect),
                     )
                     .push(
                         Button::new(&mut self.disconnect_button, Text::new("Disconned"))
